@@ -25,17 +25,7 @@
                 android:id="@+id/tvDocenteNombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Docente: Nombre"
-                android:textAppearance="@style/TextAppearance.Body1"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvEstudianteNombre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Estudiante: Nombre"
+                android:text="Docente"
                 android:textAppearance="@style/TextAppearance.Body1"
                 android:textColor="?attr/colorOnSurface"
                 android:textStyle="bold" />
@@ -45,19 +35,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Estado: Aceptado"
+                android:text="Estado"
                 android:textAppearance="@style/TextAppearance.Body2"
                 android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEliminar"
-            style="@style/Widget.Ensenando.Button.Text"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Eliminar"
-            android:textColor="@color/accent_error" />
+            android:orientation="horizontal">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAceptar"
+                style="@style/Widget.Ensenando.Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aceptar"
+                android:textColor="@color/accent_success"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRechazar"
+                style="@style/Widget.Ensenando.Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rechazar"
+                android:textColor="@color/accent_error"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
 

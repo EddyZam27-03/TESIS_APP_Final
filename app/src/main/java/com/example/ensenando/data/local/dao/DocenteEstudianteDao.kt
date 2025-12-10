@@ -21,9 +21,6 @@ interface DocenteEstudianteDao {
     @Query("SELECT * FROM docenteestudiante WHERE id_estudiante = :idEstudiante AND estado = 'aceptado'")
     fun getDocentesAceptados(idEstudiante: Int): Flow<List<DocenteEstudianteEntity>>
     
-    @Query("SELECT * FROM docenteestudiante")
-    fun getAllRelaciones(): Flow<List<DocenteEstudianteEntity>>
-    
     @Query("SELECT * FROM docenteestudiante WHERE sync_status = 'pending'")
     suspend fun getPendingRelaciones(): List<DocenteEstudianteEntity>
     
@@ -48,4 +45,5 @@ interface DocenteEstudianteDao {
     @Query("DELETE FROM docenteestudiante WHERE id_docente = :idDocente AND id_estudiante = :idEstudiante")
     suspend fun deleteRelacion(idDocente: Int, idEstudiante: Int)
 }
+
 

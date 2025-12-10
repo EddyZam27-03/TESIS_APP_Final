@@ -43,6 +43,15 @@
                     android:text="correo@example.com"
                     android:textAppearance="@style/TextAppearance.Body2"
                     android:textColor="?attr/colorOnSurface" />
+
+                <TextView
+                    android:id="@+id/tvEstadisticas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="0 gestos aprendidos"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/colorOnSurface" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -53,17 +62,35 @@
                 android:text="Ver Reporte" />
         </LinearLayout>
 
-        <!-- Solo un botón para resetear actividad (eliminado Ver Progreso redundante) -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnResetActividad"
-            style="@style/Widget.Ensenando.Button.Secondary"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Resetear Actividad"
-            android:textSize="12sp"
-            app:strokeColor="@color/accent_warning" />
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnResetActividad"
+                style="@style/Widget.Ensenando.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="Reset Actividad"
+                android:textSize="12sp"
+                app:strokeColor="@color/accent_warning" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnVerProgreso"
+                style="@style/Widget.Ensenando.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="Ver Progreso"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+
 

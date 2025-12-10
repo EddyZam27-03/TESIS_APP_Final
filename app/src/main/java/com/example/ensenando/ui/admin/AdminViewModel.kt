@@ -12,7 +12,6 @@ import com.example.ensenando.data.remote.model.ProgresoDetalle
 import com.example.ensenando.data.remote.model.UsuarioResponse
 import com.example.ensenando.data.repository.DocenteEstudianteRepository
 import com.example.ensenando.data.repository.ProgresoRepository
-import com.example.ensenando.data.repository.UsuarioRepository
 import com.example.ensenando.util.SecurityUtils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -22,7 +21,6 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     private val apiService = RetrofitClient.apiService
     private val docenteEstudianteRepository = DocenteEstudianteRepository(application, database, apiService)
     private val progresoRepository = ProgresoRepository(application, database, apiService)
-    private val usuarioRepository = UsuarioRepository(application, database, apiService)
     
     private val _estudiantes = MutableLiveData<List<UsuarioResponse>>()
     val estudiantes: LiveData<List<UsuarioResponse>> = _estudiantes
@@ -41,32 +39,6 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     
     private val _progresoEstudiante = MutableLiveData<List<ProgresoDetalle>>()
     val progresoEstudiante: LiveData<List<ProgresoDetalle>> = _progresoEstudiante
-    
-    private val _nombresUsuarios = MutableLiveData<Map<Int, String>>()
-    val nombresUsuarios: LiveData<Map<Int, String>> = _nombresUsuarios
-    
-    // Lista completa para filtrado
-    private var relacionesCompletas: List<DocenteEstudianteEntity> = emptyList()
-    
-    init {
-        loadNombresUsuarios()
-    }
-    
-    /**
-     * Carga los nombres de todos los usuarios para mostrar en relaciones
-     */
-    private fun loadNombresUsuarios() {
-        viewModelScope.launch {
-            try {
-                val usuarios = usuarioRepository.getAllUsuarios().first()
-                val nombresMap = usuarios.associate { it.idUsuario to it.nombre }
-                _nombresUsuarios.value = nombresMap
-            } catch (e: Exception) {
-                android.util.Log.e("AdminViewModel", "Error al cargar nombres de usuarios", e)
-                _nombresUsuarios.value = emptyMap()
-            }
-        }
-    }
     
     fun cargarTodosEstudiantes() {
         viewModelScope.launch {
@@ -126,51 +98,17 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
         _docentes.value = filtrados
     }
     
-    /**
-     * Carga todas las relaciones desde la base de datos
-     * Solo se llama cuando se necesita buscar
-     */
     fun cargarRelaciones() {
         viewModelScope.launch {
             try {
                 // Cargar todas las relaciones desde la base de datos local
-                val todasLasRelaciones = database.docenteEstudianteDao().getAllRelaciones().first()
-                relacionesCompletas = todasLasRelaciones
-                // No actualizar _relaciones aquí - solo cuando se busque
+                // O hacer una llamada especial para admin
+                val relaciones = docenteEstudianteRepository.getEstudiantesByDocente(0).first()
+                _relaciones.value = relaciones
             } catch (e: Exception) {
-                android.util.Log.e("AdminViewModel", "Error al cargar relaciones", e)
-                relacionesCompletas = emptyList()
+                _relaciones.value = emptyList()
             }
         }
-    }
-    
-    /**
-     * Busca relaciones por nombre de docente o estudiante
-     * Muestra resultados solo cuando hay una búsqueda activa
-     */
-    fun buscarRelacion(query: String) {
-        val lista = relacionesCompletas
-        val nombres = _nombresUsuarios.value ?: emptyMap()
-        
-        if (query.isBlank()) {
-            _relaciones.value = emptyList()
-        } else {
-            val filtrados = lista.filter { relacion ->
-                val nombreDocente = nombres[relacion.idDocente] ?: "Docente ${relacion.idDocente}"
-                val nombreEstudiante = nombres[relacion.idEstudiante] ?: "Estudiante ${relacion.idEstudiante}"
-                nombreDocente.contains(query, ignoreCase = true) ||
-                nombreEstudiante.contains(query, ignoreCase = true) ||
-                relacion.estado.contains(query, ignoreCase = true)
-            }
-            _relaciones.value = filtrados
-        }
-    }
-    
-    /**
-     * Limpia los resultados de relaciones (oculta la lista)
-     */
-    fun limpiarRelaciones() {
-        _relaciones.value = emptyList()
     }
     
     fun generarReporte(idUsuario: Int) {
@@ -207,6 +145,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 progresoRepository.updateProgreso(idUsuario, idGesto, 0)
+                // Toast removido - el ViewModel no debe mostrar UI directamente
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -238,20 +177,12 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     }
     
     fun mostrarDialogoReset(idUsuario: Int) {
-        // Resetear todos los gestos del estudiante
+        // TODO: Implementar diálogo para seleccionar gesto
+        // Por ahora, resetear todos los gestos
         viewModelScope.launch {
-            try {
-                val progresos = progresoRepository.getProgresoByUsuario(idUsuario).first()
-                progresos.forEach { progreso ->
-                    progresoRepository.updateProgreso(idUsuario, progreso.idGesto, 0)
-                }
-                android.widget.Toast.makeText(
-                    getApplication(),
-                    "Actividad reseteada exitosamente",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            } catch (e: Exception) {
-                android.util.Log.e("AdminViewModel", "Error al resetear actividad", e)
+            val progresos = progresoRepository.getProgresoByUsuario(idUsuario).first()
+            progresos.forEach { progreso ->
+                progresoRepository.updateProgreso(idUsuario, progreso.idGesto, 0)
             }
         }
     }
@@ -262,14 +193,12 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     ): String {
         val context = getApplication<android.app.Application>()
         
-        // Obtener nombres de gestos y gestos completos
+        // Obtener nombres de gestos
         val gestosMap = mutableMapOf<Int, String>()
-        val gestosCompletosMap = mutableMapOf<Int, com.example.ensenando.data.local.entity.GestoEntity>()
         try {
             val gestosList = database.gestoDao().getAllGestos().first()
             gestosList.forEach { gesto ->
                 gestosMap[gesto.idGesto] = gesto.nombre
-                gestosCompletosMap[gesto.idGesto] = gesto
             }
         } catch (e: Exception) {
             // Si no hay gestos, continuar sin nombres
@@ -280,8 +209,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
             context,
             usuario,
             progresos,
-            gestosMap,
-            gestosCompletosMap
+            gestosMap
         )
     }
 }

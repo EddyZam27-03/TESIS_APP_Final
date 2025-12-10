@@ -12,40 +12,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tvDocenteNombre"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:text="Nombre del Docente"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvDocenteNombre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nombre del Docente"
-                android:textAppearance="@style/TextAppearance.Body1"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvDocenteCorreo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="correo@example.com"
-                android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="?attr/colorOnSurface" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvDocenteCorreo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="correo@example.com"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/colorOnSurface" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVerReporte"
-            style="@style/Widget.Ensenando.Button.Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ver Reporte" />
+            style="@style/Widget.Ensenando.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:text="Ver Reporte"
+            android:textSize="12sp" />
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+
 

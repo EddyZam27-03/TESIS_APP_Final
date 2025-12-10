@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/card_background_light">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reporte Generado"
+        android:textAppearance="@style/TextAppearance.Headline2"
+        android:textColor="@color/streaming_red" />
+
+    <TextView
+        android:id="@+id/tvReportePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Reporte generado exitosamente"
+        android:textAppearance="@style/TextAppearance.Body1"
+        android:textColor="?attr/colorOnSurface" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDescargarPdf"
+        style="@style/Widget.Ensenando.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:text="Abrir PDF" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCompartir"
+        style="@style/Widget.Ensenando.Button.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="12dp"
+        android:text="Compartir" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCerrar"
+        style="@style/Widget.Ensenando.Button.Text"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:text="Cerrar" />
+
+</LinearLayout>

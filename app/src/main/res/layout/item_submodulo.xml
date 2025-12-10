@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:background="@drawable/bg_card_shadow"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ✅ NOMBRE DEL SUBMÓDULO - Nivel 2 de la jerarquía -->
+        <TextView
+            android:id="@+id/tvSubmoduloNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submódulo"
+            android:textAppearance="@style/TextAppearance.Headline3"
+            android:textColor="@color/streaming_red"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"
+            android:paddingStart="8dp" />
+
+        <!-- ✅ RecyclerView de GESTOS (Nivel 3: Módulo → Submódulos → Gestos) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvGestos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingStart="8dp"
+            tools:listitem="@layout/item_gesto" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+

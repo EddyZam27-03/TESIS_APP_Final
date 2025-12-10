@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
     android:background="@drawable/bg_card_shadow"
+    android:clickable="true"
+    android:focusable="true"
     app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
@@ -13,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="14dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -21,42 +23,35 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- ✅ NOMBRE DEL GESTO - Nivel 3 de la jerarquía -->
             <TextView
-                android:id="@+id/tvDocenteNombre"
+                android:id="@+id/tvGestoNombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Docente: Nombre"
+                android:text="Gesto"
                 android:textAppearance="@style/TextAppearance.Body1"
                 android:textColor="?attr/colorOnSurface"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvEstudianteNombre"
-                android:layout_width="wrap_content"
+            <ProgressBar
+                android:id="@+id/progressGesto"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Estudiante: Nombre"
-                android:textAppearance="@style/TextAppearance.Body1"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvEstado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Estado: Aceptado"
-                android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="?attr/colorOnSurface" />
+                android:max="100"
+                android:progress="0" />
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEliminar"
-            style="@style/Widget.Ensenando.Button.Text"
+        <TextView
+            android:id="@+id/tvPorcentaje"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Eliminar"
-            android:textColor="@color/accent_error" />
+            android:layout_marginStart="8dp"
+            android:text="0%"
+            android:textColor="@color/streaming_red"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

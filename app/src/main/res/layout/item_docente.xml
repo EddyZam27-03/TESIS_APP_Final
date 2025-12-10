@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
     android:background="@drawable/bg_card_shadow"
+    android:clickable="true"
+    android:focusable="true"
     app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
@@ -25,38 +27,27 @@
                 android:id="@+id/tvDocenteNombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Docente: Nombre"
-                android:textAppearance="@style/TextAppearance.Body1"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
+                android:text="Nombre del Docente"
+                android:textAppearance="@style/TextAppearance.Headline3"
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
-                android:id="@+id/tvEstudianteNombre"
+                android:id="@+id/tvDocenteCorreo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Estudiante: Nombre"
-                android:textAppearance="@style/TextAppearance.Body1"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvEstado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Estado: Aceptado"
+                android:text="correo@example.com"
                 android:textAppearance="@style/TextAppearance.Body2"
                 android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEliminar"
-            style="@style/Widget.Ensenando.Button.Text"
+            android:id="@+id/btnEnviarSolicitud"
+            style="@style/Widget.Ensenando.Button.Secondary"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Eliminar"
-            android:textColor="@color/accent_error" />
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:text="Enviar Solicitud" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

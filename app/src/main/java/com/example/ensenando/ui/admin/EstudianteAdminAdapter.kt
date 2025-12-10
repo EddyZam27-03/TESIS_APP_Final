@@ -16,7 +16,7 @@ class EstudianteAdminAdapter(
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EstudianteViewHolder {
         val binding = ItemEstudianteAdminBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EstudianteViewHolder(binding, onEstudianteClick, onResetClick, onVerReporte)
+        return EstudianteViewHolder(binding, onEstudianteClick, onResetClick)
     }
     
     override fun onBindViewHolder(holder: EstudianteViewHolder, position: Int) {
@@ -34,17 +34,17 @@ class EstudianteAdminAdapter(
             binding.tvEstudianteNombre.text = estudiante.nombre
             binding.tvEstudianteCorreo.text = estudiante.correo
             
-            // Botón Ver Reporte - muestra el reporte del estudiante
             binding.btnVerReporte.setOnClickListener {
                 onVerReporte(estudiante)
             }
             
-            // Botón Reset Actividad - resetea toda la actividad del estudiante
+            binding.btnVerProgreso.setOnClickListener {
+                onEstudianteClick(estudiante)
+            }
+            
             binding.btnResetActividad.setOnClickListener {
                 onResetClick(estudiante)
             }
-            
-            // Eliminado: btnVerProgreso era redundante porque Ver Reporte ya muestra el progreso completo
         }
     }
     
