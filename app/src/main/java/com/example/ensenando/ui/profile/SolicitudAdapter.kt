@@ -93,17 +93,17 @@ class SolicitudAdapter(
             when {
                 // Docentes: botones Aceptar/Rechazar solo para solicitudes pendientes
                 rol == "docente" && solicitud.estado.lowercase() == "pendiente" -> {
-                    binding.btnAceptar.visibility = android.view.View.VISIBLE
-                    binding.btnRechazar.visibility = android.view.View.VISIBLE
+                binding.btnAceptar.visibility = android.view.View.VISIBLE
+                binding.btnRechazar.visibility = android.view.View.VISIBLE
                     binding.btnEliminar.visibility = android.view.View.GONE
-                    
-                    binding.btnAceptar.setOnClickListener {
-                        onAceptar?.invoke(solicitud.idDocente, solicitud.idEstudiante)
-                    }
-                    
-                    binding.btnRechazar.setOnClickListener {
-                        onRechazar?.invoke(solicitud.idDocente, solicitud.idEstudiante)
-                    }
+                
+                binding.btnAceptar.setOnClickListener {
+                    onAceptar?.invoke(solicitud.idDocente, solicitud.idEstudiante)
+                }
+                
+                binding.btnRechazar.setOnClickListener {
+                    onRechazar?.invoke(solicitud.idDocente, solicitud.idEstudiante)
+                }
                 }
                 // Mostrar botón Eliminar para relaciones aceptadas (tanto estudiantes como docentes)
                 solicitud.estado.lowercase() == "aceptado" -> {
@@ -117,8 +117,8 @@ class SolicitudAdapter(
                 }
                 // Ocultar todos los botones para otros estados
                 else -> {
-                    binding.btnAceptar.visibility = android.view.View.GONE
-                    binding.btnRechazar.visibility = android.view.View.GONE
+                binding.btnAceptar.visibility = android.view.View.GONE
+                binding.btnRechazar.visibility = android.view.View.GONE
                     binding.btnEliminar.visibility = android.view.View.GONE
                 }
             }

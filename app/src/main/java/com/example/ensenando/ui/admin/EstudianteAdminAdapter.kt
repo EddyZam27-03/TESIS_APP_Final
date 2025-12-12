@@ -34,6 +34,11 @@ class EstudianteAdminAdapter(
             binding.tvEstudianteNombre.text = estudiante.nombre
             binding.tvEstudianteCorreo.text = estudiante.correo
 
+            // Click en el card para ver progreso (acción principal)
+            binding.root.setOnClickListener {
+                onEstudianteClick(estudiante)
+            }
+
             // Botón Ver Reporte - muestra el reporte del estudiante
             binding.btnVerReporte.setOnClickListener {
                 onVerReporte(estudiante)

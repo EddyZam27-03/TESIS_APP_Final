@@ -119,6 +119,8 @@ dependencies {
 
     // Lifecycle
     implementation(libs.bundles.lifecycle)
+    implementation(libs.bundles.lifecycle)
+
 
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -133,7 +135,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
 
-    // Corrutinas
+    // Corrutinas - Versión estable y compatible
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Retrofit & OkHttp

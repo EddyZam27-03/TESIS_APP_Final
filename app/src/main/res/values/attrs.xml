@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Atributo personalizado para divider (compatible con MaterialCardView) -->
+    <attr name="divider" format="color|reference" />
+</resources>
+

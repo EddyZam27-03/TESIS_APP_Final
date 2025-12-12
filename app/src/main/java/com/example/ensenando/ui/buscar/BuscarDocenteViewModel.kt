@@ -47,16 +47,35 @@ class BuscarDocenteViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             _loading.value = true
             try {
-                val response = apiService.buscarEstudiante(busqueda = busqueda)
-                if (response.isSuccessful) {
-                    // Filtrar solo docentes
-                    val resultados = response.body() ?: emptyList()
-                    val docentes = resultados.filter { it.rol == "docente" }
-                    _docentes.value = docentes
-                } else {
-                    _docentes.value = emptyList()
+                // Primero cargar todos los docentes si no están cargados
+                val todosDocentes = _docentes.value
+                if (todosDocentes.isNullOrEmpty()) {
+                    val response = apiService.listarDocentes()
+                    if (response.isSuccessful) {
+                        _docentes.value = response.body() ?: emptyList()
+                    }
                 }
+                
+                // Filtrar localmente por nombre, apellido, correo o identificador
+                val docentesActuales = _docentes.value ?: emptyList()
+                val busquedaLower = busqueda.lowercase().trim()
+                
+                val docentesFiltrados = docentesActuales.filter { docente ->
+                    val nombre = docente.nombre?.lowercase() ?: ""
+                    val correo = docente.correo?.lowercase() ?: ""
+                    val idUsuario = docente.id_usuario?.toString() ?: ""
+                    val id = docente.id?.toString() ?: ""
+                    
+                    // Buscar en nombre completo (puede incluir apellido)
+                    nombre.contains(busquedaLower) ||
+                    correo.contains(busquedaLower) ||
+                    idUsuario.contains(busquedaLower) ||
+                    id.contains(busquedaLower)
+                }
+                
+                _docentes.value = docentesFiltrados
             } catch (e: Exception) {
+                android.util.Log.e("BuscarDocenteViewModel", "Error al buscar docente", e)
                 _docentes.value = emptyList()
             }
             _loading.value = false

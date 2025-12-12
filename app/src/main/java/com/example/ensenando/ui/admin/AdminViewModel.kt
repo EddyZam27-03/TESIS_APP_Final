@@ -12,6 +12,7 @@ import com.example.ensenando.data.remote.model.ProgresoDetalle
 import com.example.ensenando.data.remote.model.UsuarioResponse
 import com.example.ensenando.data.repository.DocenteEstudianteRepository
 import com.example.ensenando.data.repository.ProgresoRepository
+import com.example.ensenando.data.repository.LogroTracker
 import com.example.ensenando.util.SecurityUtils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -80,33 +81,85 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     fun buscarEstudiante(busqueda: String) {
         viewModelScope.launch {
             try {
-                val response = apiService.buscarEstudiante(busqueda = busqueda)
-                if (response.isSuccessful) {
-                    val resultados = response.body() ?: emptyList()
-                    val estudiantes = resultados.filter { it.rol == "estudiante" }
-                    _estudiantes.value = estudiantes
+                // Primero cargar todos los estudiantes si no están cargados
+                val todosEstudiantes = _estudiantes.value
+                if (todosEstudiantes.isNullOrEmpty()) {
+                    cargarTodosEstudiantes()
                 }
+                
+                // Filtrar localmente por nombre, apellido, correo o identificador
+                val estudiantesActuales = _estudiantes.value ?: emptyList()
+                val busquedaLower = busqueda.lowercase().trim()
+                
+                val estudiantesFiltrados = estudiantesActuales.filter { estudiante ->
+                    val nombre = estudiante.nombre?.lowercase() ?: ""
+                    val correo = estudiante.correo?.lowercase() ?: ""
+                    val idUsuario = estudiante.id_usuario?.toString() ?: ""
+                    val id = estudiante.id?.toString() ?: ""
+                    
+                    // Buscar en nombre completo (puede incluir apellido)
+                    nombre.contains(busquedaLower) ||
+                    correo.contains(busquedaLower) ||
+                    idUsuario.contains(busquedaLower) ||
+                    id.contains(busquedaLower)
+                }
+                
+                _estudiantes.value = estudiantesFiltrados
             } catch (e: Exception) {
+                android.util.Log.e("AdminViewModel", "Error al buscar estudiante", e)
                 _estudiantes.value = emptyList()
             }
         }
     }
     
     fun buscarDocenteLocal(query: String) {
-        val lista = _docentes.value ?: return
-        val filtrados = lista.filter { it.nombre.contains(query, ignoreCase = true) || it.correo.contains(query, ignoreCase = true) }
-        _docentes.value = filtrados
+        viewModelScope.launch {
+            try {
+                // Primero cargar todos los docentes si no están cargados
+                val todosDocentes = _docentes.value
+                if (todosDocentes.isNullOrEmpty()) {
+                    cargarDocentes()
+                }
+                
+                // Filtrar localmente por nombre, apellido, correo o identificador
+                val docentesActuales = _docentes.value ?: emptyList()
+                val busquedaLower = query.lowercase().trim()
+                
+                val docentesFiltrados = docentesActuales.filter { docente ->
+                    val nombre = docente.nombre?.lowercase() ?: ""
+                    val correo = docente.correo?.lowercase() ?: ""
+                    val idUsuario = docente.id_usuario?.toString() ?: ""
+                    val id = docente.id?.toString() ?: ""
+                    
+                    // Buscar en nombre completo (puede incluir apellido)
+                    nombre.contains(busquedaLower) ||
+                    correo.contains(busquedaLower) ||
+                    idUsuario.contains(busquedaLower) ||
+                    id.contains(busquedaLower)
+                }
+                
+                _docentes.value = docentesFiltrados
+            } catch (e: Exception) {
+                android.util.Log.e("AdminViewModel", "Error al buscar docente", e)
+            }
+        }
     }
     
     fun cargarRelaciones() {
         viewModelScope.launch {
             try {
                 // Cargar todas las relaciones desde la base de datos local
-                // O hacer una llamada especial para admin
-                val relaciones = docenteEstudianteRepository.getEstudiantesByDocente(0).first()
-                _relaciones.value = relaciones
+                val todasRelaciones = database.docenteEstudianteDao().getAllRelaciones().first()
+                _relaciones.value = todasRelaciones
             } catch (e: Exception) {
-                _relaciones.value = emptyList()
+                android.util.Log.e("AdminViewModel", "Error al cargar relaciones", e)
+                // Fallback: intentar cargar desde el repositorio
+                try {
+                    val relaciones = docenteEstudianteRepository.getEstudiantesByDocente(0).first()
+                    _relaciones.value = relaciones
+                } catch (e2: Exception) {
+                    _relaciones.value = emptyList()
+                }
             }
         }
     }
@@ -134,6 +187,9 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
                     )
                 
                 val reporte = generarReportePDF(usuario, progresos)
+                LogroTracker.marcarReporteGenerado(
+                    getApplication<Application>().getSharedPreferences("logros_prefs", android.content.Context.MODE_PRIVATE)
+                )
                 _reporteGenerado.value = Result.success(reporte)
             } catch (e: Exception) {
                 _reporteGenerado.value = Result.failure(e)
@@ -176,13 +232,28 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
     
-    fun mostrarDialogoReset(idUsuario: Int) {
-        // TODO: Implementar diálogo para seleccionar gesto
-        // Por ahora, resetear todos los gestos
+    private val _mostrarDialogoReset = MutableLiveData<Int?>()
+    val mostrarDialogoReset: LiveData<Int?> = _mostrarDialogoReset
+    
+    fun solicitarDialogoReset(idUsuario: Int) {
+        _mostrarDialogoReset.value = idUsuario
+    }
+    
+    fun limpiarDialogoReset() {
+        _mostrarDialogoReset.value = null
+    }
+    
+    fun resetearTodosGestos(idUsuario: Int) {
         viewModelScope.launch {
-            val progresos = progresoRepository.getProgresoByUsuario(idUsuario).first()
-            progresos.forEach { progreso ->
-                progresoRepository.updateProgreso(idUsuario, progreso.idGesto, 0)
+            try {
+                val progresos = progresoRepository.getProgresoByUsuario(idUsuario).first()
+                progresos.forEach { progreso ->
+                    progresoRepository.updateProgreso(idUsuario, progreso.idGesto, 0)
+                }
+                // Notificar éxito
+                android.util.Log.d("AdminViewModel", "Gestos reseteados para usuario $idUsuario")
+            } catch (e: Exception) {
+                android.util.Log.e("AdminViewModel", "Error al resetear gestos", e)
             }
         }
     }

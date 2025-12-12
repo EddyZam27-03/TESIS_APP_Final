@@ -4,11 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:background="@drawable/bg_card_3d"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="18dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="0dp">
+    app:cardElevation="2dp"
+    app:strokeColor="@color/divider_light"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,10 +46,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Módulo"
-                android:textAppearance="@style/TextAppearance.Body1"
+                android:textAppearance="@style/TextAppearance.Headline3"
                 android:textColor="?attr/colorOnSurface"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivExpandCollapse"
@@ -60,7 +66,7 @@
             android:id="@+id/rvGestos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:visibility="gone"
             tools:listitem="@layout/item_gesto"
             tools:visibility="visible" />

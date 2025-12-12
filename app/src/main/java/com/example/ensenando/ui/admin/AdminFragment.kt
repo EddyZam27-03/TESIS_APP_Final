@@ -62,12 +62,10 @@ class AdminFragment : Fragment() {
                 }
             },
             onResetClick = { estudiante ->
-                // Resetear actividad del estudiante
+                // Solicitar diálogo de confirmación para resetear
                 val idUsuario = estudiante.id_usuario ?: estudiante.id
                 if (idUsuario != null) {
-                    lifecycleScope.launch {
-                        viewModel.mostrarDialogoReset(idUsuario)
-                    }
+                    viewModel.solicitarDialogoReset(idUsuario)
                 }
             },
             onVerReporte = { estudiante ->
@@ -96,6 +94,15 @@ class AdminFragment : Fragment() {
     }
     
     private fun setupObservers() {
+        // Observar solicitud de diálogo de reset
+        viewModel.mostrarDialogoReset.observe(viewLifecycleOwner) { idUsuario ->
+            idUsuario?.let {
+                mostrarDialogoConfirmacionReset(it)
+                // Limpiar el valor después de usarlo
+                viewModel.limpiarDialogoReset()
+            }
+        }
+        
         viewModel.reporteGenerado.observe(viewLifecycleOwner) { result ->
             result.onSuccess { filePath ->
                 // Abrir PDF con app externa
@@ -135,6 +142,35 @@ class AdminFragment : Fragment() {
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+    }
+    
+    private fun mostrarDialogoConfirmacionReset(idUsuario: Int) {
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Confirmar Reestablecimiento")
+            .setMessage("¿Estás seguro/a de reestablecer los gestos? Esta acción no se puede deshacer.")
+            .setPositiveButton("Aceptar") { _, _ ->
+                viewModel.resetearTodosGestos(idUsuario)
+                android.widget.Toast.makeText(
+                    requireContext(),
+                    "Gestos reestablecidos exitosamente",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+            .setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false) // Evitar que se cierre al tocar fuera
+            .create()
+        
+        dialog.show()
+        
+        // Estilizar botones del diálogo
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)?.apply {
+            setTextColor(android.graphics.Color.parseColor("#D32F2F"))
+        }
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
+            setTextColor(android.graphics.Color.parseColor("#757575"))
         }
     }
     

@@ -24,6 +24,9 @@ interface DocenteEstudianteDao {
     @Query("SELECT * FROM docenteestudiante WHERE sync_status = 'pending'")
     suspend fun getPendingRelaciones(): List<DocenteEstudianteEntity>
     
+    @Query("SELECT * FROM docenteestudiante")
+    fun getAllRelaciones(): Flow<List<DocenteEstudianteEntity>>
+    
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRelacion(relacion: DocenteEstudianteEntity)
     

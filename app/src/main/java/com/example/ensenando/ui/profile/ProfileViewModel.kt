@@ -11,7 +11,9 @@ import com.example.ensenando.data.local.entity.UsuarioEntity
 import com.example.ensenando.data.repository.DocenteEstudianteRepository
 import com.example.ensenando.data.repository.ProgresoRepository
 import com.example.ensenando.data.repository.UsuarioRepository
+import com.example.ensenando.data.repository.LogroTracker
 import com.example.ensenando.data.remote.RetrofitClient
+import com.example.ensenando.data.repository.LogroRepository
 import com.example.ensenando.util.SecurityUtils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -179,6 +181,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 if (usuario != null) {
                     // Generar reporte simple (texto por ahora)
                     val reporte = generarReporteLocal(usuario, progresos)
+                    // Marcar reporte generado para logros
+                    LogroTracker.marcarReporteGenerado(
+                        getApplication<Application>().getSharedPreferences("logros_prefs", android.content.Context.MODE_PRIVATE)
+                    )
                     _reporteGenerado.value = Result.success(reporte)
                 } else {
                     _reporteGenerado.value = Result.failure(Exception("Usuario no encontrado"))

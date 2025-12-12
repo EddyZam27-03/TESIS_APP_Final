@@ -84,7 +84,20 @@ class BuscarDocenteFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         
-        // Buscar docente - usar etBusqueda del layout
+        // Buscar docente - filtrado en tiempo real
+        binding.etBusqueda.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                val busqueda = s?.toString() ?: ""
+                if (busqueda.isNotEmpty()) {
+                    viewModel.buscarDocente(busqueda)
+                } else {
+                    viewModel.cargarTodosDocentes()
+                }
+            }
+        })
+        
         binding.etBusqueda.setOnEditorActionListener { _, _, _ ->
             val busqueda = binding.etBusqueda.text.toString()
             if (busqueda.isNotEmpty()) {

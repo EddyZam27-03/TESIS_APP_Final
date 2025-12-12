@@ -31,6 +31,13 @@
         <item name="colorError">@color/accent_error</item>
         <item name="colorOnError">@color/white</item>
         
+        <!-- Divider Color (para MaterialCardView stroke) -->
+        <item name="divider">@color/divider_light</item>
+        
+        <!-- Material Card Attributes -->
+        <item name="cardViewStyle">@style/CardStyle</item>
+        <item name="materialCardViewStyle">@style/CardStyle</item>
+        
         <!-- Window & Status Bar -->
         <item name="android:windowBackground">@color/background_primary_light</item>
         <item name="android:statusBarColor">@color/background_primary_light</item>
