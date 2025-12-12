@@ -73,11 +73,9 @@ class ReporteDialogFragment : DialogFragment() {
                 val pageCount = pdfRenderer!!.pageCount
                 binding.tvReportePath.text = """
                     📄 Reporte Generado Exitosamente
-                    
                     📁 Archivo: ${file.name}
                     📊 Tamaño: ${file.length() / 1024} KB
                     📑 Páginas: $pageCount
-                    
                     Desliza para ver todas las páginas del reporte.
                 """.trimIndent()
 
